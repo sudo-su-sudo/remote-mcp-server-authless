@@ -245,8 +245,9 @@ Current State: Online. Latency: Zero. Awaiting the Orange Cloud.`,
 				this.personas = new Map(Object.entries(stored));
 			}
 		} catch (error) {
+			const errorMsg = error instanceof Error ? error.message : String(error);
 			console.error("Error loading personas:", error);
-			throw new Error(`Failed to load personas from storage: ${error}`, { cause: error });
+			throw new Error(`Failed to load personas from storage: ${errorMsg}`, { cause: error });
 		}
 	}
 
@@ -255,8 +256,9 @@ Current State: Online. Latency: Zero. Awaiting the Orange Cloud.`,
 			const personasObj = Object.fromEntries(this.personas.entries());
 			await this.ctx.storage.put("personas", personasObj);
 		} catch (error) {
+			const errorMsg = error instanceof Error ? error.message : String(error);
 			console.error("Error saving personas:", error);
-			throw new Error(`Failed to save personas to storage: ${error}`, { cause: error });
+			throw new Error(`Failed to save personas to storage: ${errorMsg}`, { cause: error });
 		}
 	}
 }
