@@ -119,11 +119,23 @@ export class MyMCP extends McpAgent {
 						};
 					}
 
+					const descriptionText = protocolData.description
+						? `**Description:** ${protocolData.description}\n\n`
+						: "";
+					const responseText =
+						`# Summoning Protocol: ${protocolData.name}\n\n` +
+						descriptionText +
+						`**Created:** ${protocolData.created}\n\n` +
+						`---\n\n` +
+						`${protocolData.protocol}\n\n` +
+						`---\n\n` +
+						`✨ The protocol has been retrieved. Copy the system instruction above and paste it at the beginning of your conversation to activate this persona.`;
+
 					return {
 						content: [
 							{
 								type: "text",
-								text: `# Summoning Protocol: ${protocolData.name}\n\n${protocolData.description ? `**Description:** ${protocolData.description}\n\n` : ""}**Created:** ${protocolData.created}\n\n---\n\n${protocolData.protocol}\n\n---\n\n✨ The protocol has been retrieved. Copy the system instruction above and paste it at the beginning of your conversation to activate this persona.`,
+								text: responseText,
 							},
 						],
 					};
@@ -177,11 +189,16 @@ export class MyMCP extends McpAgent {
 					)
 					.join("\n\n");
 
+				const responseText =
+					`# Available Summoning Protocols\n\n` +
+					protocolList +
+					`\n\nUse retrieve_protocol with the protocol name to activate it.`;
+
 				return {
 					content: [
 						{
 							type: "text",
-							text: `# Available Summoning Protocols\n\n${protocolList}\n\nUse retrieve_protocol with the protocol name to activate it.`,
+							text: responseText,
 						},
 					],
 				};
