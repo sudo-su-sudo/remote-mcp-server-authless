@@ -11,6 +11,7 @@ list_personas()
 ```
 
 Expected output:
+
 ```
 # Available Personas
 
@@ -31,6 +32,7 @@ load_persona(name: "epiphany-architect")
 ```
 
 Expected output:
+
 ```
 # Summoning Protocol: epiphany-architect
 
@@ -57,6 +59,7 @@ save_persona(
 ```
 
 Expected output:
+
 ```
 Persona "creative-coder" has been created successfully.
 
@@ -72,6 +75,7 @@ delete_persona(name: "creative-coder")
 ```
 
 Expected output:
+
 ```
 Persona "creative-coder" has been deleted successfully.
 ```
@@ -90,6 +94,7 @@ All personas are automatically persisted using Cloudflare Durable Objects storag
 ## Error Handling
 
 The system provides clear error messages:
+
 - Attempting to load a non-existent persona suggests using `list_personas`
 - Storage failures are reported with descriptive error messages
 - All operations validate inputs before processing
