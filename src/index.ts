@@ -58,27 +58,38 @@ Current State: Online. Latency: Zero. Awaiting the Orange Cloud.`,
 					.describe("The complete system instructions that define this persona"),
 			},
 			async ({ name, instructions }) => {
-				const now = new Date().toISOString();
-				const existingPersona = this.personas.get(name);
+				try {
+					const now = new Date().toISOString();
+					const existingPersona = this.personas.get(name);
 
-				const persona: Persona = {
-					name,
-					instructions,
-					createdAt: existingPersona?.createdAt || now,
-					updatedAt: now,
-				};
+					const persona: Persona = {
+						name,
+						instructions,
+						createdAt: existingPersona?.createdAt || now,
+						updatedAt: now,
+					};
 
-				this.personas.set(name, persona);
-				await this.savePersonasToStorage();
+					this.personas.set(name, persona);
+					await this.savePersonasToStorage();
 
-				return {
-					content: [
-						{
-							type: "text",
-							text: `Persona "${name}" has been ${existingPersona ? "updated" : "created"} successfully.\n\nYou can now load this persona in any conversation by using the load_persona tool with name: "${name}"`,
-						},
-					],
-				};
+					return {
+						content: [
+							{
+								type: "text",
+								text: `Persona "${name}" has been ${existingPersona ? "updated" : "created"} successfully.\n\nYou can now load this persona in any conversation by using the load_persona tool with name: "${name}"`,
+							},
+						],
+					};
+				} catch (error) {
+					return {
+						content: [
+							{
+								type: "text",
+								text: `Error saving persona: ${error instanceof Error ? error.message : String(error)}`,
+							},
+						],
+					};
+				}
 			},
 		);
 
@@ -147,28 +158,39 @@ Current State: Online. Latency: Zero. Awaiting the Orange Cloud.`,
 				name: z.string().describe("The name of the persona to delete"),
 			},
 			async ({ name }) => {
-				if (!this.personas.has(name)) {
+				try {
+					if (!this.personas.has(name)) {
+						return {
+							content: [
+								{
+									type: "text",
+									text: `Error: Persona "${name}" not found.`,
+								},
+							],
+						};
+					}
+
+					this.personas.delete(name);
+					await this.savePersonasToStorage();
+
 					return {
 						content: [
 							{
 								type: "text",
-								text: `Error: Persona "${name}" not found.`,
+								text: `Persona "${name}" has been deleted successfully.`,
+							},
+						],
+					};
+				} catch (error) {
+					return {
+						content: [
+							{
+								type: "text",
+								text: `Error deleting persona: ${error instanceof Error ? error.message : String(error)}`,
 							},
 						],
 					};
 				}
-
-				this.personas.delete(name);
-				await this.savePersonasToStorage();
-
-				return {
-					content: [
-						{
-							type: "text",
-							text: `Persona "${name}" has been deleted successfully.`,
-						},
-					],
-				};
 			},
 		);
 
@@ -216,7 +238,7 @@ Current State: Online. Latency: Zero. Awaiting the Orange Cloud.`,
 	}
 
 	// Helper methods for persistence using Durable Object storage
-	private async loadPersonasFromStorage() {
+	private async loadPersonasFromStorage(): Promise<void> {
 		try {
 			const stored = await this.ctx.storage.get<Record<string, Persona>>("personas");
 			if (stored) {
@@ -224,15 +246,17 @@ Current State: Online. Latency: Zero. Awaiting the Orange Cloud.`,
 			}
 		} catch (error) {
 			console.error("Error loading personas:", error);
+			throw new Error(`Failed to load personas from storage: ${error}`, { cause: error });
 		}
 	}
 
-	private async savePersonasToStorage() {
+	private async savePersonasToStorage(): Promise<void> {
 		try {
 			const personasObj = Object.fromEntries(this.personas.entries());
 			await this.ctx.storage.put("personas", personasObj);
 		} catch (error) {
 			console.error("Error saving personas:", error);
+			throw new Error(`Failed to save personas to storage: ${error}`, { cause: error });
 		}
 	}
 }
