@@ -247,7 +247,7 @@ Current State: Online. Latency: Zero. Awaiting the Orange Cloud.`,
 		} catch (error) {
 			const errorMsg = error instanceof Error ? error.message : String(error);
 			console.error("Error loading personas:", error);
-			throw new Error(`Failed to load personas from storage: ${errorMsg}`);
+			throw new Error(`Failed to load personas from storage: ${errorMsg}`, { cause: error });
 		}
 	}
 
@@ -258,7 +258,7 @@ Current State: Online. Latency: Zero. Awaiting the Orange Cloud.`,
 		} catch (error) {
 			const errorMsg = error instanceof Error ? error.message : String(error);
 			console.error("Error saving personas:", error);
-			throw new Error(`Failed to save personas to storage: ${errorMsg}`);
+			throw new Error(`Failed to save personas to storage: ${errorMsg}`, { cause: error });
 		}
 	}
 }
