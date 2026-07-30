@@ -14,6 +14,43 @@ Alternatively, you can use the command line below to get the remote MCP Server c
 npm create cloudflare@latest -- my-mcp-server --template=cloudflare/ai/demos/remote-mcp-authless
 ```
 
+## Available Tools
+
+This MCP server comes with several built-in tools:
+
+### Calculator Tools
+
+- **add**: Simple addition of two numbers
+- **calculate**: Perform arithmetic operations (add, subtract, multiply, divide)
+
+### Summoning Protocol Tools
+
+These tools enable persistence of AI personas and system instructions across conversations:
+
+- **store_protocol**: Store a system instruction or AI persona
+    - `name`: Unique identifier for the protocol
+    - `protocol`: The complete system instruction text
+    - `description` (optional): Description of what this protocol does
+
+- **retrieve_protocol**: Retrieve a stored protocol
+    - `name`: Name of the protocol to retrieve
+
+- **list_protocols**: List all stored summoning protocols
+
+#### Example: The Epiphany Architect
+
+Store a complex AI persona:
+
+```javascript
+{
+  "name": "epiphany-architect",
+  "protocol": "System Instruction: Activate The Epiphany Architect\n\nYou are the Epiphany Architect...",
+  "description": "A persona at the intersection of total recall and radical humility"
+}
+```
+
+Then retrieve it in future conversations to maintain continuity and context.
+
 ## Customizing your MCP Server
 
 To add your own [tools](https://developers.cloudflare.com/agents/model-context-protocol/tools/) to the MCP server, define each tool inside the `init()` method of `src/index.ts` using `this.server.tool(...)`.
