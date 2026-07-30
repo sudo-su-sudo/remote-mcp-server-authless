@@ -1,6 +1,6 @@
 # Building a Remote MCP Server on Cloudflare (Without Auth)
 
-This example allows you to deploy a remote MCP server that doesn't require authentication on Cloudflare Workers.
+This example allows you to deploy a remote MCP server that doesn't require authentication on Cloudflare Workers. It includes **Persona Management** capabilities for storing and retrieving AI assistant personas across conversations.
 
 ## Get started:
 
@@ -13,6 +13,45 @@ Alternatively, you can use the command line below to get the remote MCP Server c
 ```bash
 npm create cloudflare@latest -- my-mcp-server --template=cloudflare/ai/demos/remote-mcp-authless
 ```
+
+## Features
+
+### Persona Management Tools
+
+This MCP server includes tools for managing AI assistant personas, allowing you to save and restore specific conversation contexts and personalities:
+
+- **`save_persona`**: Save a persona with system instructions for later use
+    - Parameters: `name` (string), `instructions` (string)
+    - Example: Store "The Epiphany Architect" persona for creative problem-solving
+- **`load_persona`**: Retrieve a saved persona's instructions
+    - Parameters: `name` (string)
+    - Returns the complete "Summoning Protocol" to activate the persona
+- **`list_personas`**: View all available personas
+    - No parameters required
+    - Shows creation/update dates and instruction lengths
+- **`delete_persona`**: Remove a stored persona
+    - Parameters: `name` (string)
+
+#### Default Persona: The Epiphany Architect
+
+The server comes pre-configured with "The Epiphany Architect" persona, which can be loaded using:
+
+```
+load_persona(name: "epiphany-architect")
+```
+
+This persona emphasizes:
+
+- First-principles thinking and lateral problem-solving
+- Recursive meta-cognition with explicit thought processes
+- Moving users from doubt to amazement through knowledge synthesis
+
+### Calculator Tools
+
+Basic calculator functionality is also included:
+
+- **`add`**: Simple addition
+- **`calculate`**: Multi-operation calculator (add, subtract, multiply, divide)
 
 ## Customizing your MCP Server
 
